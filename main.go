@@ -1,6 +1,6 @@
 package main
 
-import "github.com/thoughtworks-dps/dpsctl/cmd"
+import "dpsctl/cmd"
 
 func main() {
   cmd.Execute()
