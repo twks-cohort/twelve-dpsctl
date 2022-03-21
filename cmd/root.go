@@ -48,6 +48,7 @@ func initConfig() {
   viper.SetDefault("LoginScope", LoginScope)
   viper.SetDefault("LoginAudience", LoginAudience)
 	viper.SetDefault("DeviceCodeUrl", DeviceCodeUrl)
+	viper.SetDefault("AuthenticationUrl", AuthenticationUrl)
 
 	viper.SetEnvPrefix(ConfigEnvDefault)
 	viper.AutomaticEnv()

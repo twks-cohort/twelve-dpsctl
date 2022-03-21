@@ -1,57 +1,89 @@
 package clients
 
 import (
-  // "encoding/json"
+  "encoding/json"
 	"io/ioutil"
 	"fmt"
 	"dpsctl/clients/models"
 	"net/http"
 	"log"
 	"strings"
+	"time"
 
-	//"github.com/spf13/viper"
-	//"github.com/tidwall/gjson"
+	"github.com/spf13/viper"
+	"github.com/tidwall/gjson"
 )
 
 func RequestDeviceCode() models.DeviceCode {
-	fmt.Println("Requesting device code...")
+	payload := strings.NewReader(fmt.Sprintf("client_id=%s&scope=%s&audience=%s",
+		viper.Get("LoginClientId").(string),
+		viper.Get("LoginScope").(string),
+		viper.Get("LoginAudience").(string)))
 
-	url := "https://dev-twdpsio.us.auth0.com/oauth/device/code"
+	body, statusCode := submitPostRequest(viper.Get("DeviceCodeUrl").(string), payload)
+	if statusCode != http.StatusOK {
+		log.Fatalf("Status: %d\n%s: %s\n", statusCode, gjson.Get(string(body), "error"), gjson.Get(string(body), "error_description"))
+	}
 
-	payload := strings.NewReader("client_id=B4jm7Wv4fjOEPqg1gjXIUUxEa6eg1HvB&scope=openid offline_access email&audience=https://mapi.twdps.digital/v1")
+	var deviceCode models.DeviceCode
+	json.Unmarshal(body, &deviceCode)
 
-	req, _ := http.NewRequest("POST", url, payload)
+	return deviceCode
+}
 
+func Authenticate(deviceCode models.DeviceCode) {
+
+	for {
+		body, statusCode := poll(deviceCode.DeviceCode)
+
+		if statusCode == "200 OK" {
+			fmt.Println("authentication successful")
+
+			var authorizationResponse models.AuthorizationResponse
+			json.Unmarshal(body, &authorizationResponse)
+
+			viper.Set("AccessToken", authorizationResponse.AccessToken)
+			viper.Set("RefreshToken", authorizationResponse.RefreshToken)
+			viper.Set("IdToken", authorizationResponse.IdToken)
+			viper.Set("ExpiresIn", authorizationResponse.ExpiresIn)
+			viper.WriteConfigAs(viper.ConfigFileUsed())
+
+			return
+		} else {
+			var authorizationPollResponse models.AuthorizationPollResponse
+			json.Unmarshal(body, &authorizationPollResponse)
+
+			switch authorizationPollResponse.Error {
+      case "authorization_pending":
+        fmt.Println("waiting...")
+        time.Sleep(time.Duration(deviceCode.Interval) * time.Second)
+      case "expired_token":
+        log.Fatal(authorizationPollResponse.ErrorDescription)
+      case "access_denied":
+        log.Fatal(authorizationPollResponse.ErrorDescription)
+      default:
+        log.Fatal(authorizationPollResponse.ErrorDescription)
+      }
+		}
+	}
+}
+
+func poll(deviceCode string) ([]byte, string) {
+
+	payload := strings.NewReader(fmt.Sprintf("client_id=%s&grant_type=urn:ietf:params:oauth:grant-type:device_code&device_code=%s",
+		viper.Get("LoginClientId").(string),
+		deviceCode))
+
+	req, _ := http.NewRequest("POST", viper.Get("AuthenticationUrl").(string), payload)
 	req.Header.Add("content-type", "application/x-www-form-urlencoded")
-
 	res, _ := http.DefaultClient.Do(req)
 
 	defer res.Body.Close()
+
 	body, _ := ioutil.ReadAll(res.Body)
-
-	fmt.Println(res)
-	fmt.Println(string(body))
-
-
-
-
-	// payload := strings.NewReader(fmt.Sprintf("client_id=%s&scope=%s&audience=%s",
-	// 	viper.Get("LoginClientId").(string),
-	// 	viper.Get("LoginScope").(string),
-	// 	viper.Get("LoginAudience").(string)))
-
-	// body, statusCode := submitPostRequest(viper.Get("DeviceCodeUrl").(string), payload)
-
-	// fmt.Println("Status code: ", statusCode)
-	// fmt.Println("Body: ", string(body))
-	// // if statusCode != http.StatusOK {
-	// // 	log.Fatalf("Status: %d\n%s: %s\n", statusCode, gjson.Get(string(body), "error"), gjson.Get(string(body), "error_description"))
-	// // }
-
-	var deviceCode models.DeviceCode
-	// //json.Unmarshal(body, &deviceCode)
-
-	return deviceCode
+	// fmt.Println(string(body))
+	// fmt.Println(res.Status)
+	return body, res.Status
 }
 
 func submitPostRequest(url string, payload *strings.Reader) ([]byte, int) {

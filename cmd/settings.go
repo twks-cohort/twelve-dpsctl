@@ -2,11 +2,12 @@ package cmd
 
 // dpsctl default settings
 const (
-	LoginClientId		 						 = "B4jm7Wv4fjOEPqg1gjXIUUxEa6eg1HvB"
-	LoginScope                   = "openid offline_access email"
-	LoginAudience                = "https://mapi.twdps.digital/v1"
+	LoginClientId		 						 = "2EOaJoAdFLSs1fxwi3lBc1ad1P0k5pPG"
+	LoginScope                   = "openid offline_access profile email"
+	LoginAudience                = ""
 
 	DeviceCodeUrl								 = "https://dev-twdpsio.us.auth0.com/oauth/device/code"
+	AuthenticationUrl            = "https://dev-twdpsio.us.auth0.com/oauth/token"
 
 	ConfigEnvDefault             = "DPSCTL"
 	ConfigFileDefaultName        = "config"
