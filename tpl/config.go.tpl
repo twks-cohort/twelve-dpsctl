@@ -1,5 +1,5 @@
 // dpsctl default settings
-//lint:file-ignore U1000 ignore unterminated string literals
+// lint:file-ignore
 package cmd
 
 type ClusterConfig struct {

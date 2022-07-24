@@ -38,7 +38,7 @@ func submitcode(url string) {
 	var err error
 
 	fmt.Println("dpsctl will attempt to open a browser window where you can authenticate and verify your laptop.")
-  fmt.Println("If the window does not open, go to the link below.\n")
+  fmt.Println("If the window does not open, go to the link below.\n") //nolint:govet
   fmt.Printf("%s\n", url)
 	switch runtime.GOOS {
 	case "linux":

@@ -43,7 +43,7 @@ func init() {
 // Config file definitions
 // Default values from settings.go
 func initConfig() {
-	
+
 	viper.SetDefault("LoginClientID", LoginClientId)
   viper.SetDefault("LoginScope", LoginScope)
   viper.SetDefault("LoginAudience", LoginAudience)
@@ -72,7 +72,7 @@ func initConfig() {
 		exitOnError(err)
 		emptyFile.Close()
 	}
-	viper.WriteConfig()
+	viper.WriteConfig() //nolint:errcheck
 }
 
 func defaultConfigLocation() string {

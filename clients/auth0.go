@@ -28,7 +28,7 @@ func RequestDeviceCode() models.DeviceCode {
 	}
 
 	var deviceCode models.DeviceCode
-	json.Unmarshal(body, &deviceCode)
+	json.Unmarshal(body, &deviceCode) //nolint:errcheck
 
 	return deviceCode
 }
@@ -42,18 +42,18 @@ func Authenticate(deviceCode models.DeviceCode) {
 			fmt.Println("authentication successful")
 
 			var authorizationResponse models.AuthorizationResponse
-			json.Unmarshal(body, &authorizationResponse)
+			json.Unmarshal(body, &authorizationResponse) //nolint:errcheck
 
 			viper.Set("AccessToken", authorizationResponse.AccessToken)
 			viper.Set("RefreshToken", authorizationResponse.RefreshToken)
 			viper.Set("IdToken", authorizationResponse.IdToken)
 			viper.Set("ExpiresIn", authorizationResponse.ExpiresIn)
-			viper.WriteConfig()
+			viper.WriteConfig() //nolint:errcheck
 
 			return
 		} else {
 			var authorizationPollResponse models.AuthorizationPollResponse
-			json.Unmarshal(body, &authorizationPollResponse)
+			json.Unmarshal(body, &authorizationPollResponse) //nolint:errcheck
 
 			switch authorizationPollResponse.Error {
       case "authorization_pending":
@@ -80,7 +80,7 @@ func poll(deviceCode string) ([]byte, string) {
 	req.Header.Add("content-type", "application/x-www-form-urlencoded")
 	res, _ := http.DefaultClient.Do(req)
 
-	defer res.Body.Close()
+	defer res.Body.Close() //nolint:govet
 
 	body, _ := ioutil.ReadAll(res.Body)
 	return body, res.Status
