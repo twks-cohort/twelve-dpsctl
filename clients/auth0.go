@@ -15,12 +15,14 @@ import (
 )
 
 func RequestDeviceCode() models.DeviceCode {
+	deviceCodeUrl := viper.GetString("IdpIssuerUrl") + "oauth/device/code"
 	payload := strings.NewReader(fmt.Sprintf("client_id=%s&scope=%s&audience=%s",
 		viper.Get("LoginClientId").(string),
 		viper.Get("LoginScope").(string),
-		viper.Get("LoginAudience").(string)))
+		viper.Get("LoginAudience").(string)),
+	)
 
-	body, statusCode := submitPostRequest(viper.Get("DeviceCodeUrl").(string), payload)
+	body, statusCode := submitPostRequest(deviceCodeUrl, payload)
 	if statusCode != http.StatusOK {
 		log.Fatalf("Status: %d\n%s: %s\n", statusCode, gjson.Get(string(body), "error"), gjson.Get(string(body), "error_description"))
 	}
@@ -46,7 +48,7 @@ func Authenticate(deviceCode models.DeviceCode) {
 			viper.Set("RefreshToken", authorizationResponse.RefreshToken)
 			viper.Set("IdToken", authorizationResponse.IdToken)
 			viper.Set("ExpiresIn", authorizationResponse.ExpiresIn)
-			viper.WriteConfigAs(viper.ConfigFileUsed())
+			viper.WriteConfig()
 
 			return
 		} else {
@@ -69,20 +71,18 @@ func Authenticate(deviceCode models.DeviceCode) {
 }
 
 func poll(deviceCode string) ([]byte, string) {
-
+	authenticationUrl := viper.GetString("IdpIssuerUrl") + "oauth/token"
 	payload := strings.NewReader(fmt.Sprintf("client_id=%s&grant_type=urn:ietf:params:oauth:grant-type:device_code&device_code=%s",
 		viper.Get("LoginClientId").(string),
 		deviceCode))
 
-	req, _ := http.NewRequest("POST", viper.Get("AuthenticationUrl").(string), payload)
+	req, _ := http.NewRequest("POST", authenticationUrl, payload)
 	req.Header.Add("content-type", "application/x-www-form-urlencoded")
 	res, _ := http.DefaultClient.Do(req)
 
 	defer res.Body.Close()
 
 	body, _ := ioutil.ReadAll(res.Body)
-	// fmt.Println(string(body))
-	// fmt.Println(res.Status)
 	return body, res.Status
 }
 

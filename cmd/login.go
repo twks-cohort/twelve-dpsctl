@@ -12,8 +12,8 @@ import (
 
 var loginCmd = &cobra.Command{
 	Use:               "login",
-	Short:             "Login to twdps lab",
-	Long:              `Login to twdps lab using authenticated Github credentials`,
+	Short:             "Login to empc platform starter kit lab",
+	Long:              `Login to empc platform starter kit lab using authenticated Github credentials`,
 	DisableAutoGenTag: true,
 	Args:              cobra.ExactValidArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {

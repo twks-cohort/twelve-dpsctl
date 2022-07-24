@@ -10,7 +10,8 @@ By default the cli is configured to attempt to authenticate against a production
 
 In order to test against the dev-twdpsio auth0 tenant set the following values to the dev-tenant settings.  
 ```bash
-export DPSCTL_DEVICECODEURL=https://dev-twdpsio.us.auth0.com/oauth/device/code
-export DPSCTL_AUTHENTICATIONURL=https://dev-twdpsio.us.auth0.com/oauth/token
+export DPSCTL_IDPISSUERURL=https://dev-twdpsio.us.auth0.com/
 export DPSCTL_LOGINCLIENTID=<insert dev-twdpsio dev-dpsctl application client id>
 ```
+
+Be sure to login in order to obtain the correct tokens.  

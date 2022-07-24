@@ -17,7 +17,7 @@ var getCmd = &cobra.Command{
 	DisableAutoGenTag: true,
 	Args:              cobra.ExactValidArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Get command")
+		fmt.Println("Get command requires a valid argument")
 	},
 }
 

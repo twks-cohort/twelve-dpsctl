@@ -10,12 +10,13 @@ import (
 )
 
 var cfgFile string
+var Version = "snapshot"
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "dpsctl",
-	Short: "twdps di platform cli",
-	Long:  `cli for use with twdps lab platform.`,
+	Short: "empc platform starter kit cli",
+	Long:  `cli for use with empc lab platform.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
@@ -25,8 +26,7 @@ var rootCmd = &cobra.Command{
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		exitOnError(err)
 	}
 }
 
@@ -47,8 +47,8 @@ func initConfig() {
 	viper.SetDefault("LoginClientID", LoginClientId)
   viper.SetDefault("LoginScope", LoginScope)
   viper.SetDefault("LoginAudience", LoginAudience)
-	viper.SetDefault("DeviceCodeUrl", DeviceCodeUrl)
-	viper.SetDefault("AuthenticationUrl", AuthenticationUrl)
+	viper.SetDefault("IdpIssuerUrl", IdpIssuerUrl)
+	viper.SetDefault("DefaultCluster", DefaultCluster)
 
 	viper.SetEnvPrefix(ConfigEnvDefault)
 	viper.AutomaticEnv()
@@ -72,6 +72,7 @@ func initConfig() {
 		exitOnError(err)
 		emptyFile.Close()
 	}
+	viper.WriteConfig()
 }
 
 func defaultConfigLocation() string {
