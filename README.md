@@ -12,4 +12,6 @@ export DPSCTL_IDPISSUERURL=https://dev-twdpsio.us.auth0.com/
 export DPSCTL_LOGINCLIENTID=<insert dev-twdpsio dev-dpsctl application client id>
 ```
 
-Be sure to login in order to obtain the correct tokens.  
+Clear your ~/.dpsctl/config.yaml file and re-login.  
+
+To obtain non default kubeconfig, includ --cluster flag with dpsctl get kubeconfig command.  
