@@ -1,6 +1,19 @@
-# dpsctl
+<div align="center">
+	<p>
+		<img alt="Thoughtworks Logo" src="https://raw.githubusercontent.com/ThoughtWorks-DPS/static/master/thoughtworks_flamingo_wave.png?sanitize=true" width=200 />
+    <br />
+		<img alt="DPS Title" src="https://raw.githubusercontent.com/ThoughtWorks-DPS/static/master/EMPCPlatformStarterKitsImage.png?sanitize=true" width=350/>
+	</p>
+  <br />
+  <h3>dpsctl</h3>
+    <a href="https://app.circleci.com/pipelines/github/ThoughtWorks-DPS/dpsctl"><img src="https://circleci.com/gh/ThoughtWorks-DPS/dpsctl.svg?style=shield"></a> <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
+</div>
+<br />
 
-Example delivery platform cli
+The cli is the primary tool for developments teams using platform starter kit based infrastructure sources.  
+
+1. [Walkthrough](doc/auth0-device-auth-flow.md) of device-authorization-flow
+2. [Quickstart](doc/quickstart.md)
 
 ### development
 
@@ -14,4 +27,4 @@ export DPSCTL_LOGINCLIENTID=<insert dev-twdpsio dev-dpsctl application client id
 
 Clear your ~/.dpsctl/config.yaml file and re-login.  
 
-To obtain non default kubeconfig, includ --cluster flag with dpsctl get kubeconfig command.  
+To obtain non default kubeconfig, include --cluster flag with `dpsctl get kubeconfig` command.  
