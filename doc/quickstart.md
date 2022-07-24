@@ -35,7 +35,6 @@ users:
     auth-provider:
       config:
         client-id: ABCDefgh12345
-        id-token: ABCDefgh12345==
         idp-issuer-url: https://twdpsio.us.auth0.com/
         refresh-token: ABCDefgh12345
       name: oidc
