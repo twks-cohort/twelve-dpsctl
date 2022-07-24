@@ -143,7 +143,9 @@ workflows:
 
   push-commits:
     jobs:
-      - static-analysis
+      - static-analysis:
+          name: run static code analysis
+          context: << pipeline.parameters.context >>
 
   release:
     jobs:
