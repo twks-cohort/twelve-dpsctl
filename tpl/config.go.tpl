@@ -1,5 +1,3 @@
-// dpsctl default settings
-// lint:file-ignore
 package cmd
 
 type ClusterConfig struct {
