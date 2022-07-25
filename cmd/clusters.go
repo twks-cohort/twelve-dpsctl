@@ -2,7 +2,8 @@ package cmd
 
 import (
 	"fmt"
-  "strings"
+	"strings"
+
 	"github.com/spf13/cobra"
 )
 
@@ -15,21 +16,21 @@ var listClustersCmd = &cobra.Command{
 	DisableAutoGenTag: true,
 	Args:              cobra.MaximumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
-    clusters := listClusters()
-    fmt.Println("Available clusters are: ", strings.Join(clusters, ", "))
+		clusters := listClusters()
+		fmt.Println("Available clusters are: ", strings.Join(clusters, ", "))
 	},
 }
 
 func init() {
-  getCmd.AddCommand(listClustersCmd)
+	getCmd.AddCommand(listClustersCmd)
 }
 
 func listClusters() []string {
-  var clusterNames []string
+	var clusterNames []string
 
-  for _, c := range clusters {
-    clusterNames = append(clusterNames, c.clusterName)
-  }
+	for _, c := range clusters {
+		clusterNames = append(clusterNames, c.clusterName)
+	}
 
-  return clusterNames
+	return clusterNames
 }
