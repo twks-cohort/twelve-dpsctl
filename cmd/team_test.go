@@ -16,7 +16,7 @@ func TestGetFixedValue(t *testing.T) {
 			t.Errorf("Expected Accept: application/json header, got: %s", r.Header.Get("Accept"))
 		}
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`{"name":"dps1"}`))
+		_, _ = w.Write([]byte(`{"name":"dps1"}`))
 	}))
 	defer server.Close()
 
@@ -38,7 +38,7 @@ func TestGetTeams(t *testing.T) {
 			t.Errorf("Expected Accept: application/json header, got: %s", r.Header.Get("Accept"))
 		}
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`[{"name":"dps2"}]`))
+		_, _ = w.Write([]byte(`[{"name":"dps2"}]`))
 	}))
 	defer server.Close()
 
