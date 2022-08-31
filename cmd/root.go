@@ -45,10 +45,11 @@ func init() {
 func initConfig() {
 
 	viper.SetDefault("LoginClientID", LoginClientId)
-  viper.SetDefault("LoginScope", LoginScope)
-  viper.SetDefault("LoginAudience", LoginAudience)
+	viper.SetDefault("LoginScope", LoginScope)
+	viper.SetDefault("LoginAudience", LoginAudience)
 	viper.SetDefault("IdpIssuerUrl", IdpIssuerUrl)
 	viper.SetDefault("DefaultCluster", DefaultCluster)
+	viper.SetDefault("TeamsApi", TeamsApi)
 
 	viper.SetEnvPrefix(ConfigEnvDefault)
 	viper.AutomaticEnv()
