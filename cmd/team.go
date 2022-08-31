@@ -27,7 +27,7 @@ var createTeamCmd = &cobra.Command{
 		apiUrl := viper.GetString("TeamsApi")
 		team, err := CreateTeam(apiUrl, teamName)
 		if err != nil {
-			err = fmt.Errorf("Unable to create team - %+v", err)
+			err = fmt.Errorf("unable to create team - %+v", err)
 			fmt.Println(err)
 			return
 		}
@@ -80,7 +80,7 @@ var deleteTeamCmd = &cobra.Command{
 		teams_url := viper.GetString("TeamsApi")
 		deletedTeam, err := DeleteTeam(teams_url, teamName)
 		if err != nil {
-			err = fmt.Errorf("Unable to delete team - %+v", err)
+			err = fmt.Errorf("unable to delete team - %+v", err)
 			fmt.Println(err)
 			return
 		}
@@ -144,7 +144,7 @@ func CreateTeam(apiUrl string, teamName string) (*Team, error) {
 	}
 
 	if response.StatusCode == 409 {
-		return nil, fmt.Errorf("The team %+v already exists", *team)
+		return nil, fmt.Errorf("the team %+v already exists", *team)
 	}
 
 	if response.StatusCode != 201 {
@@ -200,11 +200,11 @@ func DeleteTeam(apiUrl string, teamName string) (*Team, error) {
 	}
 
 	if response.StatusCode == 404 {
-		return nil, fmt.Errorf("Error from server (%s): team '%+v' not found", response.Status, team.Name)
+		return nil, fmt.Errorf("error from server (%s): team '%+v' not found", response.Status, team.Name)
 	}
 
 	if response.StatusCode != 204 {
-		return nil, fmt.Errorf("Failed to delete %s, api response: %+v", team.Name, response.Status)
+		return nil, fmt.Errorf("failed to delete %s, api response: %+v", team.Name, response.Status)
 	}
 
 	_, err = ioutil.ReadAll(response.Body)
