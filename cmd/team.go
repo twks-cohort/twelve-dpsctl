@@ -226,13 +226,14 @@ func GetTeamHandler(apiUrl string, teamName string) (*Team, error) {
 func GetTeamHttpHandler(url string, teamName string) (*Team, error) {
 
 	team := &Team{Name: teamName}
+	teamUrl := url + "/v1/teams/" + team.Name
 	request, err := http.NewRequest(
 		http.MethodGet,
-		url+"/v1/teams/"+teamName,
+		teamUrl,
 		nil,
 	)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create new http request object: , %+v", err)
+		return nil, transientError{err: err}
 	}
 
 	request.Header.Add("Accept", "application/json")
@@ -241,8 +242,9 @@ func GetTeamHttpHandler(url string, teamName string) (*Team, error) {
 		return nil, transientError{err: err}
 	}
 
+	// We cannot fully assume they have set the correct api url in settings, so print it for convenience
 	if response.StatusCode == 404 {
-		return nil, fmt.Errorf("Team not found: %s", team.Name)
+		return nil, fmt.Errorf("Team '%s' was not found at '%s", team.Name, teamUrl)
 	}
 
 	responseBytes, err := ioutil.ReadAll(response.Body)
