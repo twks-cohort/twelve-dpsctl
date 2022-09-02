@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -20,7 +19,7 @@ func TestGetFixedValue(t *testing.T) {
 	}))
 	defer server.Close()
 
-	team, _ := GetTeamHandler(server.URL, "dps1")
+	team, _ := getTeamHandler(server.URL, &Team{Name: "dps1"})
 	if team.Name != "dps1" {
 		t.Errorf("Expected 'dps1', got %s", team)
 	}
@@ -39,10 +38,9 @@ func TestGetTeams(t *testing.T) {
 	}))
 	defer server.Close()
 
-	var teams []Team
-	responseBytes := GetTeamsData(server.URL)
-	_ = json.Unmarshal(responseBytes, &teams)
-	if teams[0].Name != "dps2" {
-		t.Errorf("expected 'dps2', got %s", teams[0].Name)
+	var teams []string
+	teams, _ = ListTeamsHandler(server.URL)
+	if teams[0] != "dps2" {
+		t.Errorf("expected 'dps2', got %s", teams[0])
 	}
 }
