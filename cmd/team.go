@@ -232,7 +232,7 @@ func GetTeamHttpHandler(url string, teamName string) (*Team, error) {
 		nil,
 	)
 	if err != nil {
-		return nil, fmt.Errorf("Failed to create new http request object: , %+v", err)
+		return nil, fmt.Errorf("failed to create new http request object: , %+v", err)
 	}
 
 	request.Header.Add("Accept", "application/json")
