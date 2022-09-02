@@ -31,7 +31,7 @@ var createTeamCmd = &cobra.Command{
 			fmt.Println(err)
 			return
 		}
-		fmt.Println(team)
+		fmt.Printf("Created team: %s ", team.Name)
 	},
 }
 
@@ -84,7 +84,7 @@ var deleteTeamCmd = &cobra.Command{
 			fmt.Println(err)
 			return
 		}
-		fmt.Printf("Deleted team: %v ", *deletedTeam)
+		fmt.Printf("Deleted team: %s", deletedTeam.Name)
 	},
 }
 
@@ -94,10 +94,6 @@ func init() {
 	createCmd.AddCommand(createTeamCmd)
 	deleteCmd.AddCommand(deleteTeamCmd)
 	kubeconfigCmd.Flags().StringVarP(&teamName, "team", "t", "", "Get the team name from teams api")
-}
-
-type Teams []struct {
-	Name string `json:"name"`
 }
 
 type Team struct {

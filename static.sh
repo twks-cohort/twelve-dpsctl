@@ -1,0 +1,3 @@
+#!/bin/bash -eo pipefail
+go install honnef.co/go/tools/cmd/staticcheck@latest
+staticcheck ./...
