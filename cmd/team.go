@@ -3,6 +3,7 @@ package cmd
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -50,7 +51,11 @@ var getTeamCmd = &cobra.Command{
 		}
 
 		teamName := args[0]
-		team := GetTeam(apiUrl, teamName)
+		team, err := GetTeamHandler(apiUrl, teamName)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
 		// We'll want to return the entire object if there are other fields in the future
 		fmt.Printf(team.Name)
 	},
@@ -98,6 +103,14 @@ func init() {
 
 type Team struct {
 	Name string `json:"name"`
+}
+
+type transientError struct {
+	err error
+}
+
+func (t transientError) Error() string {
+	return fmt.Sprintf("%v", t.err)
 }
 
 func listTeams(apiUrl string) []string {
@@ -161,22 +174,6 @@ func CreateTeam(apiUrl string, teamName string) (*Team, error) {
 	return team, nil
 }
 
-func GetTeam(apiUrl string, teamName string) Team {
-	responseBytes, err := TeamData(apiUrl, teamName)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "%q", err)
-		os.Exit(1)
-	}
-
-	var team Team
-	err = json.Unmarshal(responseBytes, &team)
-	if err != nil {
-		fmt.Printf("could not unmarshal %v", err)
-	}
-
-	return team
-}
-
 func DeleteTeam(apiUrl string, teamName string) (*Team, error) {
 	team := &Team{Name: teamName}
 	request, err := http.NewRequest(
@@ -211,29 +208,55 @@ func DeleteTeam(apiUrl string, teamName string) (*Team, error) {
 	return team, nil
 }
 
-func TeamData(url string, teamName string) ([]byte, error) {
+func GetTeamHandler(apiUrl string, teamName string) (*Team, error) {
+
+	team, err := GetTeamHttpHandler(apiUrl, teamName)
+	if err != nil {
+		terr := transientError{}
+		if errors.As(err, &terr) {
+			log.Printf("There was a problem getting the team data \n")
+			log.Fatal(err.Error())
+		} else {
+			return nil, err
+		}
+	}
+	return team, nil
+}
+
+func GetTeamHttpHandler(url string, teamName string) (*Team, error) {
+
+	team := &Team{Name: teamName}
 	request, err := http.NewRequest(
 		http.MethodGet,
 		url+"/v1/teams/"+teamName,
 		nil,
 	)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Failed to create new http request object: , %+v", err)
 	}
 
 	request.Header.Add("Accept", "application/json")
-
 	response, err := http.DefaultClient.Do(request)
 	if err != nil {
-		return nil, err
+		return nil, transientError{err: err}
+	}
+
+	if response.StatusCode == 404 {
+		return nil, fmt.Errorf("Team not found: %s", team.Name)
 	}
 
 	responseBytes, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		return nil, err
+		return nil, transientError{err: err}
 	}
 
-	return responseBytes, nil
+	err = json.Unmarshal(responseBytes, &team)
+	if err != nil {
+		return nil, transientError{err: err}
+	}
+
+	return team, nil
+
 }
 
 func GetTeamsData(apiUrl string) []byte {

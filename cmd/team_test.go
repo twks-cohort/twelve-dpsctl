@@ -20,13 +20,10 @@ func TestGetFixedValue(t *testing.T) {
 	}))
 	defer server.Close()
 
-	responseBytes, _ := TeamData(server.URL, "dps1")
-	var team Team
-	_ = json.Unmarshal(responseBytes, &team)
+	team, _ := GetTeamHandler(server.URL, "dps1")
 	if team.Name != "dps1" {
 		t.Errorf("Expected 'dps1', got %s", team)
 	}
-
 }
 
 func TestGetTeams(t *testing.T) {
