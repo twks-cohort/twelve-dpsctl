@@ -4,8 +4,10 @@ import (
 	"dpsctl/clients"
 	"dpsctl/clients/models"
 	"fmt"
+	"os"
 	"os/exec"
 	"runtime"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -42,6 +44,15 @@ func submitcode(url string) {
 	switch runtime.GOOS {
 	case "linux":
 		err = exec.Command("xdg-open", url).Start()
+		//If this failed, we might be running on WSL in Windows
+		//Check if that is the case and launch a different command
+		if err != nil {
+			err = nil
+			dat, err := os.ReadFile("/proc/sys/kernel/osrelease")
+			if err == nil && strings.Contains(string(dat), "microsoft") {
+				err = exec.Command("sensible-browser", url).Start()
+			}
+		}
 	case "windows":
 		err = exec.Command("rundll32", "url.dll,FileProtocolHandler", url).Start()
 	case "darwin":
