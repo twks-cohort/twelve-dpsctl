@@ -69,7 +69,7 @@ func submitHandler(url string) error {
 			}
 
 			if isWsl {
-				exec.Command("sensible-browser", url).Start()
+				return exec.Command("sensible-browser", url).Start()
 			}
 
 			return err
