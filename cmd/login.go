@@ -32,7 +32,7 @@ func init() {
 func login(deviceCode models.DeviceCode) {
 	// provide link for browser based authentication and device verfication
 	// and attempt to automatically open a browser window for the user
-	submit(deviceCode.VerificationUriComplete)
+	submitCode(deviceCode.VerificationUriComplete)
 
 	clients.Authenticate(deviceCode)
 }
@@ -85,7 +85,7 @@ func submitHandler(url string) error {
 	}
 }
 
-func submit(url string) {
+func submitCode(url string) {
 	err := submitHandler(url)
 	if err != nil {
 		terr := transientError{}
@@ -96,16 +96,4 @@ func submit(url string) {
 			exitOnError(err)
 		}
 	}
-
-	// team, err := createTeamHandler(apiUrl, teamName)
-	// if err != nil {
-	// 	terr := transientError{}
-	// 	if errors.As(err, &terr) {
-	// 		log.Printf("There was a problem getting the team data \n")
-	// 		log.Fatal(err.Error())
-	// 	} else {
-	// 		return nil, err
-	// 	}
-	// }
-	exitOnError(err)
 }
