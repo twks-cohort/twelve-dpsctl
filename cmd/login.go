@@ -3,7 +3,9 @@ package cmd
 import (
 	"dpsctl/clients"
 	"dpsctl/clients/models"
+	"errors"
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 	"runtime"
@@ -30,35 +32,80 @@ func init() {
 func login(deviceCode models.DeviceCode) {
 	// provide link for browser based authentication and device verfication
 	// and attempt to automatically open a browser window for the user
-	submitcode(deviceCode.VerificationUriComplete)
+	submit(deviceCode.VerificationUriComplete)
 
 	clients.Authenticate(deviceCode)
 }
 
-func submitcode(url string) {
-	var err error
+func checkForWSL() (bool, error) {
+	dat, err := os.ReadFile("/proc/sys/kernel/osrelease")
+	if err != nil {
+		return false, err
+	}
 
+	if strings.Contains(string(dat), "microsoft") {
+		return true, nil
+	}
+
+	return false, nil
+}
+
+func submitHandler(url string) error {
 	fmt.Println("dpsctl will attempt to open a browser window where you can authenticate and verify your laptop.")
 	fmt.Println("If the window does not open, go to the link below.") //nolint:govet
 	fmt.Printf("%s\n", url)
+
 	switch runtime.GOOS {
 	case "linux":
-		err = exec.Command("xdg-open", url).Start()
+		err := exec.Command("xdg-open", url).Start()
+
 		//If this failed, we might be running on WSL in Windows
 		//Check if that is the case and launch a different command
 		if err != nil {
-			err = nil
-			dat, err := os.ReadFile("/proc/sys/kernel/osrelease")
-			if err == nil && strings.Contains(string(dat), "microsoft") {
-				err = exec.Command("sensible-browser", url).Start()
+			isWsl, err := checkForWSL()
+			if err != nil {
+				// Problem parsing /proc file, could be permission or other issue
+				return transientError{err: err}
 			}
+
+			if isWsl {
+				exec.Command("sensible-browser", url).Start()
+			}
+
+			return err
 		}
+
+		return nil
 	case "windows":
-		err = exec.Command("rundll32", "url.dll,FileProtocolHandler", url).Start()
+		return exec.Command("rundll32", "url.dll,FileProtocolHandler", url).Start()
 	case "darwin":
-		err = exec.Command("open", url).Start()
+		return exec.Command("open", url).Start()
 	default:
-		err = fmt.Errorf("unsupported platform")
+		return fmt.Errorf("unsupported platform")
 	}
+}
+
+func submit(url string) {
+	err := submitHandler(url)
+	if err != nil {
+		terr := transientError{}
+		if errors.As(err, &terr) {
+			log.Printf("There was a problem detecting the underlying OS \n")
+			log.Fatal(err.Error())
+		} else {
+			exitOnError(err)
+		}
+	}
+
+	// team, err := createTeamHandler(apiUrl, teamName)
+	// if err != nil {
+	// 	terr := transientError{}
+	// 	if errors.As(err, &terr) {
+	// 		log.Printf("There was a problem getting the team data \n")
+	// 		log.Fatal(err.Error())
+	// 	} else {
+	// 		return nil, err
+	// 	}
+	// }
 	exitOnError(err)
 }
