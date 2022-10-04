@@ -17,6 +17,10 @@ The cli is the primary tool for developments teams using platform starter kit ba
 
 ### development
 
+#### Config
+
+You must first generate a config. Ensure your local one password CLI is logged in. Then you can run `op inject -i tpl/config.go.tpl -o cmd/config.go`
+
 By default the cli is configured to attempt to authenticate against a production auth0 tenant ('twdpsio').  
 
 In order to test against the dev-twdpsio auth0 tenant set the following values to the dev-tenant settings.  
