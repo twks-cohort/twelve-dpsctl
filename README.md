@@ -9,6 +9,7 @@
     <a href="https://app.circleci.com/pipelines/github/ThoughtWorks-DPS/dpsctl"><img src="https://circleci.com/gh/ThoughtWorks-DPS/dpsctl.svg?style=shield"></a> <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
 </div>
 <br />
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/ThoughtWorks-DPS/dpsctl)
 
 The cli is the primary tool for developments teams using platform starter kit based infrastructure sources.  
 
