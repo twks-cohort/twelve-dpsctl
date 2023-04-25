@@ -58,7 +58,7 @@ jobs:
       - run:
           name: static code analysis
           command: |
-            go install honnef.co/go/tools/cmd/staticcheck@latest
+            go install honnef.co/go/tools/cmd/staticcheck@v0.3.3
             staticcheck ./...
       - run:
           name: lint
