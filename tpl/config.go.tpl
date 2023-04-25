@@ -18,7 +18,13 @@ var cluster2 = ClusterConfig{
 			base64CertificateAuthorityData: "{{ op://empc-lab/platform-prod-us-east-1/base64-certificate-authority-data }}",
 		}
 
-var clusters = []ClusterConfig{ cluster1, cluster2 }
+var cluster3 = ClusterConfig{
+			clusterName: "cohort-base-nonprod-us-east-2",
+			clusterEndpoint: "{{ op://empc-lab/cohort-base-platform-nonprod-us-east-2/cluster-endpoint }}",
+			base64CertificateAuthorityData: "{{ op://empc-lab/cohort-base-platform-nonprod-us-east-2/base64-certificate-authority-data }}",
+		}
+
+var clusters = []ClusterConfig{ cluster1, cluster2, cluster3 }
 
 const (
 	LoginClientId		 						    = "{{ op://empc-lab/svc-auth0/twdpsio-dpsctl-client-id}}"
