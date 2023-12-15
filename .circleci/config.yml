@@ -3,7 +3,7 @@ version: 2.1
 
 orbs:
   op: twdps/onepassword@1.0.0
-  cosign: twdps/cosign@0.1.0
+  cosign: twdps/cosign@0.1.1
   win: circleci/windows@4.1.1
 
 # =================================== global pipeline parameters
@@ -74,7 +74,8 @@ jobs:
       - op/install-op:
           os: Ubuntu
       - op/env
-      - cosign/install
+      - cosign/install:
+          cosign-version: v2.2.1
       - run:
           name: fetch keys for signing
           command: |
