@@ -1,44 +1,34 @@
 package cmd
 
 type ClusterConfig struct {
-	clusterName string
-	clusterEndpoint string
-	base64CertificateAuthorityData string
+clusterName string
+clusterEndpoint string
+base64CertificateAuthorityData string
 }
 
 var cluster1 = ClusterConfig{
-			clusterName: "sandbox-us-east-2",
-			clusterEndpoint: "{{ op://empc-lab/platform-sandbox-us-east-2/cluster-endpoint }}",
-			base64CertificateAuthorityData: "{{ op://empc-lab/platform-sandbox-us-east-2/base64-certificate-authority-data }}",
-		}
+clusterName: "sandbox-ap-southeast-2",
+clusterEndpoint: "{{ op://cohorts/twelve-platform-sandbox-ap-southeast-2/cluster-endpoint }}",
+base64CertificateAuthorityData: "{{ op://cohorts/twelve-platform-sandbox-ap-southeast-2/base64-certificate-authority-data }}",
+}
 
-var cluster2 = ClusterConfig{
-			clusterName: "prod-us-east-1",
-			clusterEndpoint: "{{ op://empc-lab/platform-prod-us-east-1/cluster-endpoint }}",
-			base64CertificateAuthorityData: "{{ op://empc-lab/platform-prod-us-east-1/base64-certificate-authority-data }}",
-		}
 
-var cluster3 = ClusterConfig{
-			clusterName: "cohort-base-nonprod-us-east-2",
-			clusterEndpoint: "{{ op://empc-lab/cohort-base-platform-nonprod-us-east-2/cluster-endpoint }}",
-			base64CertificateAuthorityData: "{{ op://empc-lab/cohort-base-platform-nonprod-us-east-2/base64-certificate-authority-data }}",
-		}
 
-var clusters = []ClusterConfig{ cluster1, cluster2, cluster3 }
+var clusters = []ClusterConfig{ cluster1 }
 
 const (
-	LoginClientId		 						    = "{{ op://empc-lab/svc-auth0/twdpsio-dpsctl-client-id}}"
-	LoginScope                      = "openid offline_access profile email"
-	LoginAudience                   = ""
+LoginClientId		 						    = "{{ op://cohorts/team-twelve-svc-auth0/dev-8zg3kpi25tnc00ds-dev-dpsctl-client-id}}"
+LoginScope                      = "openid offline_access profile email"
+LoginAudience                   = ""
 
-	IdpIssuerUrl								    = "https://twdpsio.us.auth0.com/"
+IdpIssuerUrl								    = "https://dev-8zg3kpi25tnc00ds.us.auth0.com/"
 
-	ConfigEnvDefault                = "DPSCTL"
-	ConfigFileDefaultName           = "config"
-	ConfigFileDefaultType           = "yaml"
-	ConfigFileDefaultLocation       = "/.dpsctl" // path will begin with $HOME dir
-	ConfigFileDefaultLocationMsg    = "config file (default is $HOME/.dpsctl/config.yaml)"
+ConfigEnvDefault                = "DPSCTL"
+ConfigFileDefaultName           = "config"
+ConfigFileDefaultType           = "yaml"
+ConfigFileDefaultLocation       = "/.dpsctl" // path will begin with $HOME dir
+ConfigFileDefaultLocationMsg    = "config file (default is $HOME/.dpsctl/config.yaml)"
 
-	DefaultCluster                  = "prod-us-east-1"
-	TeamsApi                        = "http://localhost:8000"
+DefaultCluster                  = "sandbox-ap-southeast-2"
+TeamsApi                        = "http://localhost:8000"
 )
