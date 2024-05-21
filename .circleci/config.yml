@@ -42,7 +42,6 @@ executors:
       - image: i386/buildpack-deps
 
 jobs:
-
   static-analysis:
     executor: go-builder
     steps:
@@ -75,7 +74,7 @@ jobs:
           os: Ubuntu
       - op/env
       - cosign/install:
-          cosign-version: v2.2.1
+          cosign-ve rsion: v2.2.1
       - run:
           name: fetch keys for signing
           command: |
@@ -91,6 +90,7 @@ jobs:
           name: Use goreleaser to build and publish executables to github packages
           command: |
             curl -sL https://git.io/goreleaser | bash
+            ls -al
             mkdir release-assets && cp dist/*.tar.* release-assets && cp dist/*.zip release-assets
       - run:
           name: validate signature
@@ -114,7 +114,7 @@ jobs:
 
   smoke-test-macos:
     macos:
-      xcode: 14.0.0
+      xcode: 15.3.0
     steps:
       - checkout
       - attach_workspace:
@@ -132,7 +132,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-            at: ~/
+          at: ~/
       - run:
           name: smoke test windows version
           command: |
