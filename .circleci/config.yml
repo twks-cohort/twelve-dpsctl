@@ -90,7 +90,6 @@ jobs:
           name: Use goreleaser to build and publish executables to github packages
           command: |
             curl -sL https://git.io/goreleaser | bash
-            ls -al
             mkdir release-assets && cp dist/*.tar.* release-assets && cp dist/*.zip release-assets
       - run:
           name: validate signature
@@ -122,7 +121,7 @@ jobs:
       - run:
           name: smoketest MacOS linux version
           command: |
-            tar -xvzf release-assets/dpsctl_macOS_x86_64.tar.gz
+            tar -xvzf release-assets/dpsctl_Darwin_x86_64.tar.gz
             ./dpsctl version | grep ${CIRCLE_TAG}
 
   smoke-test-win:
