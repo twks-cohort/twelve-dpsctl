@@ -74,7 +74,7 @@ jobs:
           os: Ubuntu
       - op/env
       - cosign/install:
-          cosign-ve rsion: v2.2.1
+          cosign-version: v2.2.1
       - run:
           name: fetch keys for signing
           command: |
