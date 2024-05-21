@@ -17,11 +17,11 @@ base64CertificateAuthorityData: "{{ op://cohorts/twelve-platform-sandbox-ap-sout
 var clusters = []ClusterConfig{ cluster1 }
 
 const (
-LoginClientId		 						    = "{{ op://cohorts/team-twelve-svc-auth0/dev-8zg3kpi25tnc00ds-dev-dpsctl-client-id}}"
+LoginClientId		 			= "{{ op://cohorts/team-twelve-svc-auth0/dev-8zg3kpi25tnc00ds-dev-dpsctl-client-id }}"
 LoginScope                      = "openid offline_access profile email"
 LoginAudience                   = ""
 
-IdpIssuerUrl								    = "https://dev-8zg3kpi25tnc00ds.us.auth0.com/"
+IdpIssuerUrl					= "https://dev-8zg3kpi25tnc00ds.us.auth0.com/"
 
 ConfigEnvDefault                = "DPSCTL"
 ConfigFileDefaultName           = "config"
